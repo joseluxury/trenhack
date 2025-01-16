@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestra Historia</title>
+    <style>
+        /* Estilo general */
+        body {  
+            margin: 0;
+            background-color: #f0f8ff;
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #ff7a7a;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        /* Fondo con imágenes */
+        .background {
+            background-image: url('https://pin.it/4XZS7agtN'); /* Cambia la URL por la de una imagen de fondo */
+            background-size: cover;
+            background-position: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Sección de fotos */
+        .photos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 30px;
+            gap: 20px; /* Ajusta el espacio entre las fotos */
+        }
+
+        .photos img {
+            width: 30%;
+            max-width: 300px;
+            border-radius: 10px;
+            transition: transform 0.5s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            margin: 10px; /* Añade un margen para separar las imágenes */
+        }
+
+        .photos img:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        /* Modal para abrir la foto más grande */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 60px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+        }
+
+        .modal-text {
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #ff7a7a;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Sección de texto */
+        .text-section {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            transition: transform 0.5s ease-in-out;
+            transform: perspective(800px);
+        }
+
+        .text-section:hover {
+            transform: rotateY(10deg);
+        }
+
+        .text-section p {
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+
+        /* Sección interactiva de la pregunta */
+        .question-section {
+            text-align: center;
+            margin-top: 50px;
+            transition: transform 0.5s ease-in-out;
+            transform: perspective(800px);
+        }
+
+        .question-section:hover {
+            transform: rotateY(10deg);
+        }
+
+        .question-section h2 {
+            font-size: 1.8em;
+            color: #ff7a7a;
+        }
+
+        .question-section button {
+            background-color: #ff7a7a;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 30px;
+            margin: 10px;
+            cursor: pointer;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .question-section button:hover {
+            background-color: #ff4d4d;
+            transform: scale(1.1);
+        }
+
+        /* Stickers y decoraciones */
+        .stickers {
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            z-index: 1;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            width: 80%;
+        }
+
+        .sticker {
+            width: 60px;
+            height: 60px;
+            margin: 10px;
+            background-size: cover;
+            border-radius: 50%;
+        }
+
+        /* Animación de sticker de Snoopy */
+        .sticker.snoopy {
+            background-image: url('C:\Users\joseh\Downloads\Jimena\imagenesparalapgina\IMGSNOPPY.jpg'); /* Cambia por una imagen de Snoopy */
+            animation: bounce 1.5s infinite;
+        }
+
+        /* Animación de stickers */
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+    </style>
+</head>
+<body>  
+    <!-- Pantalla de advertencia -->
+    <div id="warning-screen" style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;">
+        <h1>Advertencia</h1>
+        <p>Por favor, da clic aqui, confia en mi corazon, te gustara.</p>
+        <button style="
+            background-color: #ff4081;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;"
+            onclick="startPage()">Da clic aquí, bonita</button>
+    </div>
+
+    <!-- Audio oculto -->
+    <audio id="background-music" loop>
+        <source src="C:\Users\joseh\Downloads\Jimena\Your_Turn_[_YouConvert.net_].mp3" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+
+    <script>
+        function startPage() {
+            const audio = document.getElementById("background-music");
+            const warningScreen = document.getElementById("warning-screen");
+
+            audio.play()
+                .then(() => {
+                    console.log("Música activada");
+                })
+                .catch(error => {
+                    console.error("No se pudo reproducir la música:", error);
+                    alert("Activa el sonido de tu navegador para reproducir la música.");
+                });
+
+            // Ocultar la pantalla de advertencia
+            warningScreen.style.display = "none";
+        }
+    </script>
+
+
+    <div class="background"></div>
+
+    <div class="container">
+        <h1>Nuestra Historia de Amor</h1>
+
+        <!-- Sección de fotos -->
+        <div class="photos">
+            <img src="C:\Users\joseh\Downloads\Jimena\imagenesparalapgina\IMG_2558.jpg" alt="Momento 1" onclick="openModal('foto1', 'Este fue el día que fuimos a la playa juntos. Fue uno de los momentos más especiales.')">
+            <img src="C:\Users\joseh\Downloads\Jimena\imagenesparalapgina\IMG_1120.jpg" alt="Momento 2" onclick="openModal('foto2', 'Recuerdo esta noche llena de risas y felicidad. Gracias por siempre hacerme sonreír.')">
+            <img src="C:\Users\joseh\Downloads\Jimena\imagenesparalapgina\IMG_1547.jpg" alt="Momento 3" onclick="openModal('foto3', 'Nuestro primer aniversario fue tan especial. Cada día contigo es un regalo.')">
+            <img src="C:\Users\joseh\Downloads\Jimena\imagenesparalapgina\IMG_2089.jpg" alt="Momento 4" onclick="openModal('foto4', 'Este día juntos en el parque fue tan increíble. Disfrutamos de cada momento.')">
+            <img src="C:\Users\joseh\Downloads\Jimena\imagenesparalapgina\IMG_2691.jpg" alt="Momento 5" onclick="openModal('foto5', 'Este día que compartimos en el cine, me hizo darte cuenta de lo mucho que te quiero.')">
+            <img src="C:\Users\joseh\Downloads\Jimena\imagenesparalapgina\IMG_2869.jpg" alt="Momento 6" onclick="openModal('foto6', 'Una noche llena de estrellas, caminando juntos y soñando con nuestro futuro.')">
+            <img src="C:\Users\joseh\Downloads\Jimena\imagenesparalapgina\IMG_3117.jpg" alt="Momento 7" onclick="openModal('foto7', 'Este día me mostraste lo que es verdaderamente el amor. Gracias por estar a mi lado.')">
+            <img src="C:\Users\joseh\Downloads\Jimena\imagenesparalapgina\IMG_3162.jpg" alt="Momento 8" onclick="openModal('foto8', 'Un abrazo que nunca olvidaré, un día lleno de emociones y sentimientos.')">
+            <img src="C:\Users\joseh\Downloads\Jimena\imagenesparalapgina\IMG_1679.jpg" alt="Momento 9" onclick="openModal('foto9', 'Cada vez que estamos juntos, el mundo parece detenerse. Gracias por ser mi todo.')">
+            <img src="C:\Users\joseh\Downloads\Jimena\imagenesparalapgina\IMG_2234.jpg" alt="Momento 10" onclick="openModal('foto10', 'Nuestra primera cita, todo fue tan mágico, y supe que eras la persona que siempre había soñado.')">
+        </div>
+
+        <!-- Modal para ver la foto en grande -->
+        <div id="fotoModal" class="modal">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img id="modalImage" class="modal-content">
+            <div id="modalText" class="modal-text"></div>
+        </div>
+
+      <!-- Sección de texto con animación, fuegos artificiales y texto cambiante -->
+<div class="text-section">
+    <!-- Contenedor de los fuegos artificiales -->
+    <div class="fireworks-container">
+        <div class="firework"></div>
+        <div class="firework"></div>
+        <div class="firework"></div>
+    </div>
+    
+    <!-- Texto animado -->
+    <p id="animatedText" class="animated-text">
+        Jimena, Si algun dia quieres llorar llamame: no prometo hacerte reir, pero puedo llorar contigo. Si un dia logras escapar, no dudes en llamarme: no prometo pedir que te quedes pero puedo escapar contigo. Si un dia no quieres hablar con nadie, llamame: estaremos en silencio. Pero si me llamas un dia y no contesto, ven corriendo hacia mi: por que sin duda te necesitaré.
+    </p>
+</div>
+
+<style>
+/* Fondo de la sección */
+.text-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #00172D, #004080); /* Fondo nocturno */
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+    padding: 20px;
+}
+
+/* Texto animado con efecto nítido */
+.animated-text {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
+                 0 0 20px rgba(255, 255, 255, 0.6);
+    animation: floatText 4s infinite ease-in-out;
+    z-index: 2;
+    line-height: 1.5;
+}
+
+/* Animación del texto */
+@keyframes floatText {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* Contenedor de fuegos artificiales */
+.fireworks-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* Fuego artificial */
+.firework {
+    position: absolute;
+    bottom: 0;
+    width: 10px;
+    height: 10px;
+    background: radial-gradient(circle, #ff6a88, #ff3a50, transparent);
+    border-radius: 50%;
+    animation: firework 2s infinite ease-in-out;
+}
+
+/* Diferentes animaciones para los fuegos artificiales */
+.firework:nth-child(1) {
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.firework:nth-child(2) {
+    left: 50%;
+    animation-delay: 0.5s;
+}
+
+.firework:nth-child(3) {
+    left: 80%;
+    animation-delay: 1s;
+}
+
+/* Animación de los fuegos artificiales */
+@keyframes firework {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-50vh) scale(2);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-100vh) scale(0.5);
+        opacity: 0;
+    }
+}
+</style>
+
+<script>
+    // Lista de textos que se alternarán
+    const texts = [
+        "Jimena, Sé que hay quienes dicen que estas cosas no pasan y que, con el tiempo, muchos olvidan lo que es amar con el corazón lleno. Sé que algún día esto será solo un recuerdo, que nuestras fotos serán imágenes viejas guardadas en un cajón, y que la vida nos llevará a ser papá y mamá de alguien. Pero ahora, en este preciso momento, esto no es un recuerdo. Esto está pasando, y estoy aquí, mirándote, porque eres increíblemente hermosa. Puedo sentirlo: este instante en el que no eres una historia triste, sino todo lo contrario. Estás aquí, viva, conmigo, y el mundo entero parece brillar. Escucho la canción de nuestra vida en este viaje que compartimos, y en este momento, amor mío, te lo juro: somos infinitos.",
+        "¿Sabes que me gusta de ti, mi canelita? Que eres como la luz del atardecer: cálida, brillante y llena de todos los colores más hermosos, mezclados a la perfección.",
+        "Te prometo que no todo será fácil, y sé que habrá días en los que quizá dudemos o queramos rendirnos. Pero también te prometo que, si no te pido que seas parte de mi vida para siempre, lo lamentaré cada día, porque mi corazón no deja de decirme que tú eres mi hogar, mi única y mi siempre."
+    ];
+
+    let currentIndex = 0;
+    const animatedTextElement = document.getElementById('animatedText');
+
+    // Función para cambiar el texto cada 20 segundos
+    function changeText() {
+        currentIndex = (currentIndex + 1) % texts.length;
+        animatedTextElement.innerHTML = texts[currentIndex];
+    }
+
+    // Cambiar texto cada 20 segundos
+    setInterval(changeText, 20000);
+</script>
+
+
+
+<!-- Sección interactiva de la pregunta -->
+<div class="question-section">
+    <h2>¿Quieres seguir construyendo nuestra historia?</h2>
+    <button id="siButton">Sí</button>
+    <button id="noButton">No</button>
+</div>
+
+<script>
+    // Obtener los botones
+    const siButton = document.getElementById("siButton");
+    const noButton = document.getElementById("noButton");
+
+    // Función para manejar el clic en el botón "Sí"
+    siButton.addEventListener("click", function() {
+        alert("Gracias por ser parte de mi vida, cada día contigo es un regalo. Te amo.");
+    });
+
+    // Función para que el "No" se mueva aleatoriamente
+    noButton.addEventListener("mouseover", function() {
+        const maxX = window.innerWidth - noButton.offsetWidth;
+        const maxY = window.innerHeight - noButton.offsetHeight;
+
+        const randomX = Math.random() * maxX;
+        const randomY = Math.random() * maxY;
+
+        noButton.style.position = "absolute";
+        noButton.style.left = randomX + "px";
+        noButton.style.top = randomY + "px";
+    });
+
+    // Función para hacer que el "Sí" crezca cuando el "No" es perseguido
+    noButton.addEventListener("mouseover", function() {
+        siButton.style.transform = "scale(1.2)";
+    });
+
+    // Cuando el mouse sale del "No", el "Sí" vuelve a su tamaño normal
+    noButton.addEventListener("mouseout", function() {
+        siButton.style.transform = "scale(1)";
+    });
+</script>
+
+
+    <!-- Stickers decorativos -->
+    <div class="stickers">
+        <div class="sticker snoopy"></div>
+        <div class="sticker" style="background-image: url('https://example.com/heart-sticker.png');"></div>
+        <div class="sticker" style="background-image: url('https://example.com/star-sticker.png');"></div>
+    </div>
+
+    <script>
+        // Función para abrir el modal con la foto grande y el texto
+        function openModal(foto, texto) {
+            var modal = document.getElementById('fotoModal');
+            var modalImg = document.getElementById('modalImage');
+            var modalText = document.getElementById('modalText');
+            
+            modal.style.display = "block";
+            modalImg.src = document.querySelector([alt='${foto}']).src;
+            modalText.innerText = texto;
+        }
+
+        // Función para cerrar el modal
+        function closeModal() {
+            document.getElementById('fotoModal').style.display = "none";
+        }
+    </script>
+</body>
+</html>
+
+

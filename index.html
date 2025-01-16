@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación de Ciber Ataque</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Impact', sans-serif; /* Fuente más gruesa */
+            margin: 0;
+            padding: 0;
+            background: black;
+            color: #00ff00;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            cursor: none;
+            perspective: 1200px; /* Mejorar perspectiva 3D */
+        }
+
+        .background {
+            background: #000;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+        }
+
+        /* Animación de texto de hackeo con efecto 3D */
+        h1 {
+            font-size: 48px;
+            text-align: center;
+            color: red;
+            animation: glitch 2s infinite;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            padding-top: 100px;
+            transform-style: preserve-3d; /* Hacer 3D */
+            transform: rotateX(10deg) rotateY(10deg);
+            text-shadow: 0px 0px 30px rgba(255, 0, 0, 0.8), 0 0 40px rgba(255, 0, 0, 0.7);
+        }
+
+        /* Efectos de glitch */
+        @keyframes glitch {
+            0% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+            20% {
+                transform: translate(-5px, -5px) rotateY(-10deg) rotateX(10deg);
+                opacity: 0.8;
+            }
+            40% {
+                transform: translate(5px, 5px) rotateY(10deg) rotateX(-10deg);
+                opacity: 0.7;
+            }
+            60% {
+                transform: translate(-5px, 5px) rotateY(-5deg);
+                opacity: 0.5;
+            }
+            80% {
+                transform: translate(5px, -5px) rotateX(15deg);
+                opacity: 0.4;
+            }
+            100% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+        }
+
+        /* Animaciones de lluvia de códigos con 3D */
+        .code-rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -2;
+            transform-style: preserve-3d;
+        }
+
+        .code {
+            font-size: 16px;
+            color: #00ff00;
+            position: absolute;
+            animation: rain 10s infinite linear;
+            opacity: 0;
+            white-space: nowrap;
+            transform: rotateX(45deg) rotateY(10deg); /* Mejora de rotación 3D */
+        }
+
+        @keyframes rain {
+            0% { transform: translateY(-100px) rotateY(10deg); opacity: 0; }
+            50% { transform: translateY(100px) rotateY(30deg); opacity: 1; }
+            100% { transform: translateY(200px) rotateY(-20deg); opacity: 0; }
+        }
+
+        /* Animación de textos en esquinas con movimiento 3D */
+        .corner-info {
+            position: absolute;
+            font-size: 22px;
+            font-weight: bold;
+            color: red;
+            animation: moveText 8s infinite linear;
+            z-index: 10;
+            transform-style: preserve-3d;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+        }
+
+        @keyframes moveText {
+            0% { transform: translateX(-100px) rotateY(30deg); }
+            25% { transform: translateX(50vw) rotateX(30deg); }
+            50% { transform: translateX(100vw) rotateY(-30deg); }
+            75% { transform: translateX(50vw) rotateX(-30deg); }
+            100% { transform: translateX(-100px) rotateY(30deg); }
+        }
+
+        /* Barra de carga con animación 3D */
+        .loading-bar {
+            width: 100%;
+            height: 5px;
+            background: #222;
+            position: absolute;
+            bottom: 50px;
+            z-index: 5;
+            overflow: hidden;
+            transform: rotateX(20deg);
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(45deg, red, yellow, green);
+            animation: loading 15s linear infinite;
+            transform: rotateX(10deg);
+        }
+
+        @keyframes loading {
+            0% { width: 0%; }
+            25% { width: 25%; }
+            50% { width: 50%; }
+            75% { width: 75%; }
+            100% { width: 100%; }
+        }
+
+        /* Información adicional de hackeo */
+        .processing {
+            font-size: 20px;
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%) rotateX(5deg);
+            color: yellow;
+            z-index: 5;
+            animation: blink 1s infinite;
+            text-shadow: 0 0 20px rgba(255, 255, 0, 0.8);
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* Información en las esquinas */
+        .info {
+            color: #00ff00;
+            font-size: 20px;
+            font-weight: bold;
+            position: absolute;
+            z-index: 10;
+            animation: infoAnim 5s infinite linear;
+            transform: rotateX(30deg);
+            text-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+        }
+
+        @keyframes infoAnim {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(10px); }
+            100% { transform: translateY(0); }
+        }
+
+        /* Pantalla de Hackeo */
+        .screen {
+            position: absolute;
+            text-align: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotateX(15deg);
+            z-index: 2;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Fondo de hackeo -->
+    <div class="background"></div>
+
+    <!-- Pantalla de Hackeo -->
+    <div class="screen">
+        <h1>¡Tu Sistema está siendo hackeado!</h1>
+    </div>
+
+    <!-- Lluvia de Códigos -->
+    <div class="code-rain"></div>
+
+    <!-- Información en movimiento -->
+    <div class="corner-info" style="top: 5%; left: 10%;">Usuario: Jimena Gil Luna</div>
+    <div class="corner-info" style="top: 30%; left: 5%;">Universidad: Tecnológica de Parras</div>
+    <div class="corner-info" style="top: 45%; left: 10%;">Fecha: 12/10/024</div>
+    <div class="corner-info" style="top: 60%; left: 10%;">Dirección: Colonia Santo Niño</div>
+
+    <div class="corner-info" style="bottom: 5%; left: 10%;">Pareja: José Horacio Cárdenas</div>
+    <div class="corner-info" style="bottom: 15%; left: 10%;">Mejor amiga: Dulce Pérez</div>
+    <div class="corner-info" style="bottom: 20%; left: 10%;">Carrera: TSU Mercadotecnia</div>
+
+    <!-- Barra de Carga -->
+    <div class="loading-bar">
+        <div class="progress"></div>
+    </div>
+
+    <!-- Información adicional de hackeo -->
+    <div class="processing">Cargando... procesando ataque...</div>
+
+    <!-- Lluvia de Código -->
+    <div class="code-rain"></div>
+
+    <script>
+        // Generación de lluvia de códigos
+        function generateCode() {
+            const codeRainContainer = document.querySelector('.code-rain');
+            const randomX = Math.random() * window.innerWidth;
+
+            const codeElement = document.createElement('div');
+            const codeHTML = `
+                <code>&lt;html&gt;</code><br>
+                <code>&lt;head&gt;</code><br>
+                <code>&lt;title&gt;Hackeando Sistema&lt;/title&gt;</code><br>
+                <code>&lt;/head&gt;</code><br>
+                <code>&lt;body&gt;</code><br>
+                <code>&lt;h1&gt;¡Tu sistema está siendo hackeado!&lt;/h1&gt;</code><br>
+                <code>&lt;/body&gt;</code><br>
+                <code>&lt;/html&gt;</code><br>
+            `;
+
+            codeElement.classList.add('code');
+            codeElement.style.left = `${randomX}px`;  
+            codeElement.innerHTML = codeHTML;
+            codeRainContainer.appendChild(codeElement);
+
+            setTimeout(() => {
+                codeElement.remove();
+            }, 5000);
+        }
+
+        // Redirigir después de 15 segundos
+        setTimeout(function() {
+            window.location.href = "pagina-destino.html";
+        }, 15000);
+
+        // Función para generar más lluvia de código cada 500ms
+        setInterval(generateCode, 500);
+    </script>
+
+</body>
+</html>
+
+
+
+
+
+
+
